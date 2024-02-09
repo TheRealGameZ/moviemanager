@@ -1,59 +1,38 @@
 <template>
-  <div class="d-flex align-items-center justify-content-center">
-      <div class="text-center appContainer">
-          <!-- Logo -->
-          <div class="row mb-3" style="width: 800px;">
-            </div>
+  <div class="row containerApp">
+    <div class="p-4 containerLeft" :style="leftContainerStyle" @click="adjustLayout('leftClicked')">
+      <input class="form-control" type="search" v-model="searchQuery" @input="debouncedSearch" placeholder="Search for a movie or series" aria-label="Search">
+    </div>
+    <div class="p-4 containerRight" :style="rightContainerStyle" @click="adjustLayout('rightClicked')">
+      <div class="row" style="height: 20%">
+        <div class="col">
 
-            <!-- Search Bar -->
-            <div class="row mb-4">
-                <div class="col">
-                    <input class="form-control" type="search" v-model="searchQuery" @input="debouncedSearch" placeholder="Search for a movie or series" aria-label="Search">
-                    <div v-if="searchResults.length" class="dropdown-menu d-block">
-                        <a v-for="(result, index) in searchResults" :key="index" class="dropdown-item" href="#">
-                            {{ result.title }}
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-          <!-- Sort Button -->
-          <button class="btn btn-primary mb-4" @click="sortMoviesByRanking">Sort by Ranking</button>
-
-          <!-- 6x6 Card Grid (angepasst für Scrollbar) -->
-          <div class="row">
-              <div class="col">
-                <h4>Movies</h4>
-                <div class="container scrollable-container gap-3">
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>                  
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>                  
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>                  
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>                  
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>                  
-                </div>
-              </div>
-              <div class="col">
-                <h4>TV-Shows</h4>
-                <div class="container scrollable-container">
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
-                  <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>                  
-                </div>
-              </div>
-          </div>
+        </div>
+        <div class="col">
+          <Toggle-Btn>k</Toggle-Btn>
+        </div>
       </div>
+      <div class="row " style="height: 80%">
+        <div class="col scrollable-container">
+          <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
+          <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
+          <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
+          <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
+          <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
+          <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
+          <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
+          <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
+          <data-base-entry class="mb-3" watchCounter="2" addDate="2.2.2" title="The Movie"></data-base-entry>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { debounce } from './utils';
 import DataBaseEntry from '@/components/DataBaseEntry.vue';
+import ToggleBtn from '@/components/ToggleBtn.vue';
 
 export default {
   name: 'App',
@@ -62,16 +41,35 @@ export default {
       searchQuery: '',
       searchResults: [],
       movies: [],
-      allMovies: [] 
+      allMovies: [],
+      leftContainerStyle: {
+        width: '58.333333%',
+        transition: 'width 0.4s ease'
+      },
+      rightContainerStyle: {
+        width: '41.666667%',
+        transition: 'width 0.4s ease'
+      }
     }
   },
   components: {
-    DataBaseEntry
+    DataBaseEntry,
+    ToggleBtn
   },
   methods: {
 
     sortMoviesByRanking() {
       this.movies.sort((a, b) => b.rank - a.rank); // Beispiel, wenn 'rank' die zu sortierende Eigenschaft ist
+    },
+
+    adjustLayout(action) {
+      if (action === 'leftClicked') {
+        this.leftContainerStyle.width = '58.333333%';
+        this.rightContainerStyle.width = '41.666667%';
+      } else {
+        this.leftContainerStyle.width = '41.666667%';
+        this.rightContainerStyle.width = '58.333333%';
+      }
     },
 
     async searchMovies() {
@@ -81,7 +79,7 @@ export default {
       }
 
       // Filter client-side if data already fetched
-      const filteredMovies = this.allMovies.filter(movie => 
+      const filteredMovies = this.allMovies.filter(movie =>
         movie.title.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
 
@@ -92,11 +90,11 @@ export default {
         await this.fetchMoviesFromApi(this.searchQuery);
       }
     },
-    
-    debounce(func, delay) 
+
+    debounce(func, delay)
     {
         let debounceTimer;
-        
+
         return function() {
         const context = this;
         const args = arguments;
@@ -132,24 +130,42 @@ export default {
 </script>
 
 <style scoped>
+  .containerApp
+  {
+    border-radius: 20px;
+    overflow: hidden;
+    height: 80%;
+  }
+
+  .containerLeft
+  {
+    background-image: linear-gradient(to right, #9f80f4, #f96cab);
+  }
+
+  .containerRight
+  {
+    background-image: linear-gradient(to right, #7784b0, #384162);
+  }
+
+
 
  .appContainer{
     backdrop-filter: blur(10px);
-    color:white; 
-    padding: 20px; 
+    color:white;
+    padding: 20px;
     border-radius: 15px;
  }
 
   .scrollable-container {
-  max-height: 700px;
-  overflow-y: auto; 
-  scrollbar-width: thin; 
+  max-height: 600px;
+  overflow-y: auto;
+  scrollbar-width: thin;
   scrollbar-color: #888 transparent;
-}
+  }
 
 
 .scrollable-container::-webkit-scrollbar {
-  width: 4px; 
+  width: 4px;
 }
 
 .scrollable-container::-webkit-scrollbar-track {
@@ -157,7 +173,7 @@ export default {
 }
 
 .scrollable-container::-webkit-scrollbar-thumb {
-  background-color: #888; 
+  background-color: #888;
   border-radius: 2px;
 }
 </style>
